@@ -1,8 +1,8 @@
 // LoginForm.js
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import client from '@/client'
 
-export const Auth = () => {
+export const Auth = ({ onLogin }: { onLogin: any }) => {
     const [username, setUsername] = useState('johndoe@mail.com')
     const [status, setStatus] = useState('logged out')
     const [password, setPassword] = useState('')
@@ -19,14 +19,16 @@ export const Auth = () => {
         e.preventDefault()
 
         try {
-            const loginResponse = await client.api.post('/auth/login', {email: username, password})
+            const loginResponse = await client.api.post('/auth/login', { email: username, password })
             localStorage.setItem('accessToken', loginResponse.data.data.access_token)
             localStorage.setItem('refreshToken', loginResponse.data.data.refresh_token)
 
             setStatus('logged in')
+            onLogin(true)
 
             // You can add your login logic here using the username and password state
-            console.log('Login submitted with:', {username, password})
+            console.log('Login submitted with:', { username, password })
+
         } catch (error) {
             setStatus('Error')
         }
@@ -35,22 +37,22 @@ export const Auth = () => {
     return (
         <div>
             <h2>Login Form</h2>
-            <h2 style={{color: status === 'logged in' ? 'green' : 'red'}}>Status: {status}</h2>
+            <h2 style={{ color: status === 'logged in' ? 'green' : 'red' }}>Status: {status}</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Email:
-                    <input type='text' value={username} onChange={handleUsernameChange}/>
+                    <input type='text' value={username} onChange={handleUsernameChange} />
                 </label>
-                <br/>
+                <br />
                 <label>
                     Password:
-                    <input type='password' value={password} onChange={handlePasswordChange}/>
+                    <input type='password' value={password} onChange={handlePasswordChange} />
                 </label>
-                <br/>
+                <br />
                 <button type='submit'>Login</button>
             </form>
 
-            <h2 style={{color: 'red'}}> komponent ini hanya untuk tool development!! Tidak untuk di gunakan di
+            <h2 style={{ color: 'red' }}> komponent ini hanya untuk tool development!! Tidak untuk di gunakan di
                 solution</h2>
         </div>
     )
